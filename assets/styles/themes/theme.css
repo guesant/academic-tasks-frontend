@@ -1,0 +1,26 @@
+.light {
+  --app-theme-text: 0, 0, 0;
+
+  --app-theme-surface: 255, 255, 255;
+  --app-theme-background: 255, 255, 255;
+
+  --app-theme-divider: 0, 0, 0;
+}
+
+.dark {
+  --app-theme-text: 255, 255, 255;
+
+  --app-theme-background: 18, 18, 18;
+  --app-theme-surface: 33, 33, 33;
+
+  --app-theme-divider: 255, 255, 255;
+}
+
+/* .app {
+  background-color: rgb(var(--app-theme-background));
+  color: rgb(var(--app-theme-text));
+} */
+
+input {
+  color: inherit;
+}

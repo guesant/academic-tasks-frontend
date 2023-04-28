@@ -9,7 +9,12 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@sidebase/nuxt-auth": "^0.6.0-alpha.2",
     "@types/node": "^18",
-    "nuxt": "^3.4.2"
+    "nuxt": "^3.4.2",
+    "nuxt-graphql-client": "^0.2.27",
+    "ufo": "^1.1.1",
+    "vite-svg-loader": "^4.0.0"
   }
 }
