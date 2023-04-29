@@ -11,7 +11,10 @@
 </template>
 
 <script lang="ts" setup>
-const { isFetching, verifyUserHasRole } = await useAuthedUserInfo();
+import { useAppAuthedUserInfo } from '~/composables/auth/useAppAuthedUserInfo';
+
+
+const { isFetching, verifyUserHasRole } = await useAppAuthedUserInfo();
 
 const userHasRoleAdmin = verifyUserHasRole("admin");
 

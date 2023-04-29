@@ -1,18 +1,16 @@
 <template>
   <div>
     <DashboardContainer>
-      <h1>Início</h1>
+      <h1>Professores</h1>
     </DashboardContainer>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Middleware } from '~/helpers/Middleware';
+
 definePageMeta({
   layout: 'dashboard',
-  auth: false
-})
-
-useHead({
-  title: 'Academic Tasks - Início',
+  middleware: [Middleware.AUTH]
 })
 </script>

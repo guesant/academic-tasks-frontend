@@ -5,6 +5,8 @@
   --app-theme-background: 255, 255, 255;
 
   --app-theme-divider: 0, 0, 0;
+
+  --app-bs-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
 .dark {
@@ -14,6 +16,8 @@
   --app-theme-surface: 33, 33, 33;
 
   --app-theme-divider: 255, 255, 255;
+
+  --app-bs-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
 /* .app {
@@ -23,4 +27,13 @@
 
 input {
   color: inherit;
+}
+
+body,
+input {
+  font-family: "Archivo", Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.app-bs-shadow {
+  box-shadow: var(--app-bs-shadow);
 }

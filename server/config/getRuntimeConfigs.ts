@@ -1,57 +1,76 @@
-import { withHttps, withoutTrailingSlash } from "ufo";
+import { joinURL, parseURL, stringifyParsedURL, withoutTrailingSlash } from "ufo";
 
 const PRODUCTION_URL = process.env.PRODUCTION_URL;
+
+const loadUrl = (url: string) => stringifyParsedURL(parseURL(url, "https://"));
 
 const getVercelURL = () => {
   const vercelEnv = process.env.VERCEL_ENV;
 
-  if (vercelEnv === "production") {
-    return PRODUCTION_URL;
+  if (typeof vercelEnv === "string" && vercelEnv.length > 0) {
+    if (vercelEnv === "production" && PRODUCTION_URL) {
+      return PRODUCTION_URL;
+    }
+
+    const vercelCommitURLRaw = process.env.VERCEL_URL;
+
+    const vercelCommitURL = vercelCommitURLRaw ? loadUrl(vercelCommitURLRaw) : null;
+
+    return vercelCommitURL;
   }
 
-  const vercelCommitURLRaw = process.env.VERCEL_URL;
-
-  const vercelCommitURL = vercelCommitURLRaw ? withHttps(vercelCommitURLRaw) : null;
-
-  return vercelCommitURL;
+  return null;
 };
 
 const getNetlifyURL = () => {
   if (process.env.NETLIFY) {
-    if (process.env.CONTEXT === "production") {
-      return process.env.URL ?? PRODUCTION_URL;
-    }
+    const netlifyCommitURLRaw = process.env.DEPLOY_URL;
 
-    return process.env.DEPLOY_URL;
+    const netlifyCommitURL = netlifyCommitURLRaw ? loadUrl(netlifyCommitURLRaw) : null;
+
+    return netlifyCommitURL;
   }
 
   return null;
 };
 
 const getRuntimeURL = () => {
-  const runtimeURLRaw = process.env.RUNTIME_URL ?? getVercelURL() ?? getNetlifyURL();
+  const runtimeURLRaw = PRODUCTION_URL ?? getNetlifyURL() ?? getVercelURL();
 
   const runtimeURL = runtimeURLRaw && withoutTrailingSlash(runtimeURLRaw);
 
   return runtimeURL;
 };
 
-const getAuthBaseURL = () => {
+const getAuthOrigin = () => {
   const url = getRuntimeURL();
+  const origin = process.env.AUTH_ORIGIN ?? url;
+  return origin;
+};
 
-  const AUTH_ORIGIN = url ?? process.env.AUTH_ORIGIN;
+const getAuthBaseURL = () => {
+  const origin = getAuthOrigin();
 
-  return AUTH_ORIGIN;
+  const baseUrl = origin ? joinURL(origin, "/api/auth") : undefined;
+
+  return baseUrl;
+};
+
+const getGQLHost = () => {
+  const gqlHost = process.env.GQL_HOST!;
+  return gqlHost;
 };
 
 export const getRuntimeConfigs = () => {
+  const gqlHost = getGQLHost();
+
   const url = getRuntimeURL();
 
   const authBaseURL = getAuthBaseURL();
 
   return {
     url,
-
+    gqlHost,
     authBaseURL,
   };
 };

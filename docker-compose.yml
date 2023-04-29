@@ -1,0 +1,20 @@
+services:
+  frontend:
+    image: node:18
+    user: node
+    command: sh -c "tail -f /dev/null"
+    container_name: academic-tasks-frontend
+    working_dir: /code
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+      - 24678:24678
+    volumes:
+      - .:/code
+    networks:
+      - academic-tasks-net
+
+networks:
+  academic-tasks-net:
+    external: true

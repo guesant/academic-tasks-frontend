@@ -1,18 +1,19 @@
 <template>
   <div>
     <DashboardContainer>
-      <h1>Início</h1>
+      <h1>Sobre</h1>
     </DashboardContainer>
   </div>
 </template>
 
 <script lang="ts" setup>
+
 definePageMeta({
   layout: 'dashboard',
-  auth: false
+  auth: false,
 })
 
 useHead({
-  title: 'Academic Tasks - Início',
+  title: 'Academic Tasks - Sobre',
 })
 </script>

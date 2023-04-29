@@ -22,6 +22,10 @@ const secret = process.env.AUTH_SECRET;
 export default NuxtAuthHandler({
   secret,
 
+  session: {
+    strategy: "jwt",
+  },
+
   pages: {
     // Change the default behavior to use `/login` as the path for the sign-in page
     signIn: "/login",
@@ -56,10 +60,20 @@ export default NuxtAuthHandler({
 
             return {
               id: userinfo.sub,
-              token,
+
+              user: {
+                id: userinfo.sub,
+              },
+
+              accessToken: token.access_token,
+              refreshToken: token.refresh_token,
+              accessTokenExpires: Date.now() + +token.expires_in! * 1000,
             };
           } catch (error) {
-            return null;
+            throw createError({
+              statusCode: 403,
+              statusMessage: "Credentials not working",
+            });
           }
         }
 
@@ -79,27 +93,21 @@ export default NuxtAuthHandler({
       if (account && user) {
         // Credentials login
         if (account?.provider === "credentials") {
-          const token = (user as any).token;
+          const { ...incomingUser } = user as any;
 
           return {
-            user: {
-              id: user.id,
-            },
-
-            accessToken: token.access_token,
-            refreshToken: token.refresh_token,
-
-            accessTokenExpires: Date.now() + <number>token.expires_in * 1000,
+            ...incomingUser,
           };
         }
 
         // OAuth login
         return {
-          user,
+          user: {
+            id: user.id,
+          },
 
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-
           accessTokenExpires: Date.now() + <number>account.expires_in * 1000,
         };
       }

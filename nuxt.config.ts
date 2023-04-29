@@ -5,21 +5,22 @@ import { getRuntimeConfigs } from "./server/config/getRuntimeConfigs";
 
 const configs = getRuntimeConfigs();
 
-const AUTH_ORIGIN = configs.url ?? process.env.AUTH_ORIGIN;
-
-const GQL_HOST = process.env.GQL_HOST!;
-
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       runtime: configs.url ?? undefined,
+      gqlHost: configs.gqlHost,
     },
   },
 
   modules: [
     //
+    "@vueuse/nuxt",
+
     "nuxt-graphql-client",
+
     "@sidebase/nuxt-auth",
+
     "@nuxtjs/color-mode",
   ],
 
@@ -36,18 +37,26 @@ export default defineNuxtConfig({
 
   css: [
     // ...
+    "@mdi/font/css/materialdesignicons.min.css",
+    "vuetify/lib/styles/main.css",
   ],
 
   build: {
     transpile: [
       // ...
+      "vuetify",
     ],
   },
 
   auth: {
-    // defaultProvider: "sso-jipalab",
+    session: {
+      enableRefreshPeriodically: 3 * 1000,
+      enableRefreshOnWindowFocus: true,
+    },
+
     provider: {
       type: "authjs",
+      addDefaultCallbackUrl: true,
     },
 
     baseURL: configs.authBaseURL,
@@ -71,7 +80,7 @@ export default defineNuxtConfig({
 
     clients: {
       default: {
-        host: GQL_HOST,
+        host: configs.gqlHost,
 
         retainToken: true,
 

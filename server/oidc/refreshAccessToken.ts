@@ -23,6 +23,6 @@ export const refreshAccessToken = async (token: any) => {
     //   error: 'RefreshAccessTokenError',
     // };
 
-    throw error;
+    return null;
   }
 };
